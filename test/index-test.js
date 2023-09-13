@@ -8,7 +8,7 @@ test('should render the page', async (t) => {
   const server = await createCustomServer({ dev: false });
   t.teardown(() => server.closeAsync());
 
-  const response = await supertest(server).get('/');
+  const response = await supertest(server).get('/home');
 
   t.is(response.statusCode, 200);
   t.true(response.text.includes('Hello world'));

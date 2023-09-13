@@ -9,7 +9,7 @@ function withSourceMaps(nextConfig = {}) {
           filename: '[file].map[query]',
           noSources: true,
           moduleFilenameTemplate: '[resource-path]',
-          sourceRoot: '../../..',
+          sourceRoot: '../../../',
         }));
       }
 
