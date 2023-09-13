@@ -2,6 +2,14 @@
 
 This repository is used to explore the use of [native](https://nodejs.org/dist/latest-v18.x/docs/api/cli.html#node_v8_coveragedir) code coverage tools (e.g `c8`) in Next.js applications that make use of custom servers.
 
+## Prerequisites
+
+Make sure you are using Node.js 16 (or just use volta), and install all required dependencies:
+
+```bash
+npm ci
+```
+
 ## Scenarios
 
 ### Getting code coverage (defaults)
@@ -115,7 +123,11 @@ This report, while different, it contains a lot of noise, enabling source maps s
 $ cp sourcemaps.next.config.js next.config.js
 $ npx next build
 $ npx c8 --exclude-after-remap ava
+```
 
+Output:
+
+```bash
 -------------------------------------|---------|----------|---------|---------|-------------------
 File                                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------------------------|---------|----------|---------|---------|-------------------
