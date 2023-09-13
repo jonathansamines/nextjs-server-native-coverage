@@ -1,17 +1,21 @@
 # nextjs-server-native-coverage
 
-A sample repo trying to use native code coverage tools in a server Next.js application
+This repository is used to explore the use of [native](https://nodejs.org/dist/latest-v18.x/docs/api/cli.html#node_v8_coveragedir) code coverage tools (e.g `c8`) in Next.js applications that make use of custom servers.
 
 ## Scenarios
 
 ### Getting code coverage (defaults)
 
-Gets code coverage reports with all c8 defaults:
+Gets code coverage reports with `c8` defaults:
 
 ```bash
 $ npx next build
 $ npx c8 ava
+```
 
+Output:
+
+```bash
 --------------------------------------------------|---------|----------|---------|---------|------------------------------------------------------------------------
 File                                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                                                      
 --------------------------------------------------|---------|----------|---------|---------|------------------------------------------------------------------------
@@ -27,7 +31,8 @@ All files                                         |   60.23 |    59.86 |   58.33
 --------------------------------------------------|---------|----------|---------|---------|------------------------------------------------------------------------
 ```
 
-This report includes server rendered code, but because Next.js bundles all code before execution, all locations point to "generated" code within the ".next" directory.
+This report includes server rendered code, but because Next.js bundles all code before execution, all locations point to "generated" code within the ".next" directory. This problem is usually solved with the use of sourcemaps, which Next.js seems to be omitting, as confirmed by an inspection of generated code (e.g .next/server/pages).
+
 
 ### Getting code coverage using "devtool" option
 
@@ -41,17 +46,22 @@ $ npx c8 ava
 # generated report that for the most part did not work
 ```
 
-> Note: This option did not work as intended because it generates both "inline" (sourcesContent) and "external" (sources) sources in sourcemaps. We won't explore the details, but c8 seems to misrepresent code coverage when both are present.
+> **Note:** This option did not work as intended because it generates both "inline" (sourcesContent) and "external" (sources) sources in sourcemaps. We won't explore the details, but c8 seems to misrepresent code coverage when both are present.
+
 
 ### Getting code coverage using source maps plugin
 
-Using Webpack's devtool option did not work, but some search hints at Webpack's [SourceMapDevToolPlugin](https://webpack.js.org/plugins/source-map-dev-tool-plugin) for advanced use cases. After playing around with some options, we can finally get a code coverage report:
+While using Webpack's `devtool` option did not work, some search hints at Webpack's [SourceMapDevToolPlugin](https://webpack.js.org/plugins/source-map-dev-tool-plugin) for advanced use cases. After playing around with some options, we could finally get a code coverage report:
 
 ```bash
 $ cp sourcemaps.next.config.js next.config.js
 $ npx next build
 $ npx c8 ava
+```
 
+Output:
+
+```bash
 -------------------------------------------------------------------------------------------------------|---------|----------|---------|---------|-------------------
 File                                                                                                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------------------------------------------------------------------------------------------|---------|----------|---------|---------|-------------------
@@ -99,7 +109,7 @@ All files                                                                       
 -------------------------------------------------------------------------------------------------------|---------|----------|---------|---------|-------------------
 ```
 
-This report, while different, it contains a lot of noise, enabling source maps seem to have messed up with exclusions logic, as folders such as `node_modules` are now included. After digging a bit into [c8](https://www.npmjs.com/package/c8) options, `--exclude-after-remap` seems useful for our usecase:
+This report, while different, it contains a lot of noise, enabling source maps seem to have messed up with exclusions logic, as folders such as `node_modules` are now included. After digging a bit into [c8](https://www.npmjs.com/package/c8) options, `--exclude-after-remap` looks useful in our situation:
 
 ```bash
 $ cp sourcemaps.next.config.js next.config.js
