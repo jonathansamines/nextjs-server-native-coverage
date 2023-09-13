@@ -1,0 +1,24 @@
+{
+  "name": "nextjs-server-native-coverage",
+  "version": "1.0.0",
+  "description": "A sample repo trying to use native code coverage tools in a server Next.js application",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "next build",
+    "test": "c8 ava"
+  },
+  "dependencies": {
+    "next": "^13.4.19"
+  },
+  "devDependencies": {
+    "ava": "^5.3.1",
+    "c8": "^8.0.1",
+    "supertest": "^6.3.3"
+  },
+  "keywords": [],
+  "author": "Jonathan Samines <jn.samines@gmail.com>",
+  "license": "ISC"
+}
